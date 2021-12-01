@@ -1,0 +1,146 @@
+test> show dbs
+admin     41 kB
+config  12.3 kB
+local     41 kB
+test> use webdev
+switched to db webdev
+webdev> db.movies.insert({title: 'Aliens', rating: 4.5})
+DeprecationWarning: Collection.insert() is deprecated. Use insertOne, insertMany, or bulkWrite.
+{
+  acknowledged: true,
+  insertedIds: { '0': ObjectId("61a6d5355f03eb5cbaa8c8f3") }
+}
+webdev> db.movies.insertOne({title: 'Terminator', rating: 4.8})
+{
+  acknowledged: true,
+  insertedId: ObjectId("61a6d5545f03eb5cbaa8c8f4")
+}
+webdev> db.movies.insertOne({title: 'Avatar', rating: 4.7})
+{
+  acknowledged: true,
+  insertedId: ObjectId("61a6d55e5f03eb5cbaa8c8f5")
+}
+webdev> db.movies.insertOne({title: 'Dune', rating: 4.9})
+{
+  acknowledged: true,
+  insertedId: ObjectId("61a6d58e5f03eb5cbaa8c8f6")
+}
+webdev> db.movies.find()
+[
+  {
+    _id: ObjectId("61a6d5355f03eb5cbaa8c8f3"),
+    title: 'Aliens',
+    rating: 4.5
+  },
+  {
+    _id: ObjectId("61a6d5545f03eb5cbaa8c8f4"),
+    title: 'Terminator',
+    rating: 4.8
+  },
+  {
+    _id: ObjectId("61a6d55e5f03eb5cbaa8c8f5"),
+    title: 'Avatar',
+    rating: 4.7
+  },
+  {
+    _id: ObjectId("61a6d58e5f03eb5cbaa8c8f6"),
+    title: 'Dune',
+    rating: 4.9
+  }
+]
+webdev> db.movies.find({_id: ObjectId("61a6d5355f03eb5cbaa8c8f3")});
+[
+  {
+    _id: ObjectId("61a6d5355f03eb5cbaa8c8f3"),
+    title: 'Aliens',
+    rating: 4.5
+  }
+]
+webdev> db.movies.find({title: 'Aliens'});
+[
+  {
+    _id: ObjectId("61a6d5355f03eb5cbaa8c8f3"),
+    title: 'Aliens',
+    rating: 4.5
+  }
+]
+webdev> db.movies.find().pretty()
+[
+  {
+    _id: ObjectId("61a6d5355f03eb5cbaa8c8f3"),
+    title: 'Aliens',
+    rating: 4.5
+  },
+  {
+    _id: ObjectId("61a6d5545f03eb5cbaa8c8f4"),
+    title: 'Terminator',
+    rating: 4.8
+  },
+  {
+    _id: ObjectId("61a6d55e5f03eb5cbaa8c8f5"),
+    title: 'Avatar',
+    rating: 4.7
+  },
+  {
+    _id: ObjectId("61a6d58e5f03eb5cbaa8c8f6"),
+    title: 'Dune',
+    rating: 4.9
+  }
+]
+webdev> db.movies.updateOne({title:'Avatar'}, {rating: 4.9});
+MongoInvalidArgumentError: Update document requires atomic operators
+webdev> db.movies.updateOne({title:'Avatar'}, {$set:{rating: 4.9}});
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+webdev> db.movies.updateOne({_id: ObjectId("618708ce2f9dcdbdb306a5d7")}, {$set:{rating: 4.5}});
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 0,
+  modifiedCount: 0,
+  upsertedCount: 0
+}
+webdev> db.movies.deleteOne({_id: ObjectId("618708ce2f9dcdbdb306a5d7")});
+{ acknowledged: true, deletedCount: 0 }
+webdev> db.movies.updateOne({_id: ObjectId("61a6d5545f03eb5cbaa8c8f4")}, {$set:{rating: 4.5}};
+Uncaught:
+SyntaxError: Unexpected token, expected "," (1:85)
+
+> 1 | db.movies.updateOne({_id: ObjectId("61a6d5545f03eb5cbaa8c8f4")}, {$set:{rating: 4.5}};
+    |                                                                                      ^
+  2 |
+
+webdev> db.movies.updateOne({_id: ObjectId("61a6d5545f03eb5cbaa8c8f4")}, {$set:{rating: 4.5}});
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+webdev> db.movies.deleteOne({_id: ObjectId("61a6d58e5f03eb5cbaa8c8f6")});
+{ acknowledged: true, deletedCount: 1 }
+webdev> db.movies.find();
+[
+  {
+    _id: ObjectId("61a6d5355f03eb5cbaa8c8f3"),
+    title: 'Aliens',
+    rating: 4.5
+  },
+  {
+    _id: ObjectId("61a6d5545f03eb5cbaa8c8f4"),
+    title: 'Terminator',
+    rating: 4.5
+  },
+  {
+    _id: ObjectId("61a6d55e5f03eb5cbaa8c8f5"),
+    title: 'Avatar',
+    rating: 4.9
+  }
+]
+webdev>

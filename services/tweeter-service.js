@@ -1,10 +1,10 @@
-let tweets = require('../data/tweets.json');
+const dao = require('../db/tweets/tweet-dao');
 
 module.exports = (app) => {
 
-    const findAllTweets = (req, res) => {
-        res.json(tweets);
-    }
+    const findAllTweets = (req, res) =>
+        dao.findAllTweets()
+            .then(tweets => res.json(tweets));
 
     app.get('/api/tweets', findAllTweets);
 
@@ -25,10 +25,7 @@ module.exports = (app) => {
             },
             ...req.body,
         }
-        tweets = [
-            newTweet,
-            ...tweets
-        ];
+        dao.createTweet(newTweet);
         res.json(newTweet);
     }
 
@@ -36,7 +33,7 @@ module.exports = (app) => {
 
     const deleteTweet = (req, res) => {
         const id = req.params['id'];
-        tweets = tweets.filter(tweet => tweet._id !== id);
+        dao.deleteTweet(id);
         res.sendStatus(200);
     }
 
@@ -44,20 +41,15 @@ module.exports = (app) => {
 
     const likeTweet = (req, res) => {
         const id = req.params['id'];
-        tweets = tweets.map(tweet => {
-            if (tweet._id === id) {
-                if (tweet.liked === true) {
-                    tweet.liked = false;
-                    tweet.stats.likes--;
-                } else {
-                    tweet.liked = true;
-                    tweet.stats.likes++;
-                }
-                return tweet;
-            } else {
-                return tweet;
-            }
-        });
+        let tweet = dao.findById(id);
+        if (tweet.liked === true) {
+            tweet.liked = false;
+            tweet.stats.likes--;
+        } else {
+            tweet.liked = true;
+            tweet.stats.likes++;
+        }
+        dao.updateTweet(id, tweet);
         res.sendStatus(200);
     }
 
