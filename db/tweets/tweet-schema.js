@@ -7,6 +7,7 @@ const schema = mongoose.Schema({
     handle: String,
     title: String,
     tweet: String,
+    liked: Boolean,
     attachments: {
         image: String
     },
